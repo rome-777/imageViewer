@@ -17,11 +17,6 @@ app.use(express.static(DIST_PATH));
 // mount api routes
 // app.use('/api', require('./api'));
 
-// serve index.html
-// app.get('*', (req, res) => {
-//     res.sendFile(path.join(__dirname, '../public/index.html'));
-// });
-
 // error handlilng middleware
 app.use((err, req, res, next) => {
     console.error(err.stack);

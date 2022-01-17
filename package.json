@@ -6,9 +6,6 @@
   "scripts": {
     "build": "npm run clean && webpack --mode production",
     "build:dev": "npm run clean && webpack --mode development",
-    "build-babel": "npm run build-babel-server && npm run build-babel-client",
-    "build-babel-server": "babel src/server --out-dir ./dist",
-    "build-babel-client": "babel src/client --copy-files --out-dir ./dist/public",
     "start": "nodemon ./dist/server.js",
     "seed": "echo \"Error: no seed script avaialble\" && exit 1",
     "clean": "rimraf dist",
