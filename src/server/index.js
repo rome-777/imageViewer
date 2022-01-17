@@ -1,10 +1,11 @@
 const path = require('path');
 const express = require('express');
 const app = express();
-const { db, syncAndSeed } = require('./db');
+// const { db, syncAndSeed } = require('./db');
+// const a = require('../public/')
 
 const PORT = process.env.PORT || 3000;
-const PUBLIC_PATH = path.join(__dirname, '../public');
+const PUBLIC_PATH = path.join(__dirname, '../dist/public');
 const DIST_PATH = path.join(__dirname, '../dist');
 
 // body parsing middleware
@@ -14,12 +15,12 @@ app.use(express.static(PUBLIC_PATH));
 app.use(express.static(DIST_PATH));
 
 // mount api routes
-app.use('/api', require('./api'));
+// app.use('/api', require('./api'));
 
 // serve index.html
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/index.html'));
-});
+// app.get('*', (req, res) => {
+//     res.sendFile(path.join(__dirname, '../public/index.html'));
+// });
 
 // error handlilng middleware
 app.use((err, req, res, next) => {
@@ -31,10 +32,10 @@ app.use((err, req, res, next) => {
 const init = async () => {
     try {
         if (process.env.SEED) {
-            await syncAndSeed();
+            // await syncAndSeed();
         }
         else {
-            await db.sync();
+            // await db.sync();
         }
         app.listen(PORT, () => console.log(`Server listening on PORT: ${PORT}`));
     } catch (err) {
