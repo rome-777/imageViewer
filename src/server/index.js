@@ -1,18 +1,23 @@
 const path = require('path');
 const express = require('express');
 const app = express();
+const PORT = process.env.PORT || 8080;
+const DIST_PATH = path.join(__dirname, '../../dist');
+// const PUBLIC_PATH = path.join(__dirname, '../../public');
 // const { db, syncAndSeed } = require('./db');
-// const a = require('../public/')
-
-const PORT = process.env.PORT || 3000;
-const PUBLIC_PATH = path.join(__dirname, '../dist/public');
-const DIST_PATH = path.join(__dirname, '../dist');
 
 // body parsing middleware
 app.use(express.json());
-// app.use(express.urlencoded({ extended: false }))
-app.use(express.static(PUBLIC_PATH));
+app.use(express.urlencoded({ extended: false }));
+
+// serve static files
 app.use(express.static(DIST_PATH));
+// app.use(express.static(PUBLIC_PATH));
+
+// serve index.html
+app.get('*', (req, res) => {
+    res.send(path.join(__dirname, '../../public/index.html'));
+});
 
 // mount api routes
 // app.use('/api', require('./api'));

@@ -1,47 +1,47 @@
-const path = require('path')
-const nodeExternals = require('webpack-node-externals')
-const HtmlWebPackPlugin = require('html-webpack-plugin')
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
-const moduleObj = {
-    rules: [
-        {
-            test: /\.js$/,
-            exclude: /node_modules/,
-            use: 'babel-loader'
-        }
-    ]
-}
-
-// add comments (from guide)
-
-const client = {
-    entry: {
-        'client': './src/client/index.js'
-    },
-    target: 'web',
+module.exports = {
+    entry: ['./src/client/index.js'],
     output: {
-        filename: '[name].js',
-        path: path.resolve(__dirname, 'dist/public')
+        path: path.join(__dirname, './dist'),
+        filename: 'bundle.js'
     },
-    module: moduleObj,
+    module: {
+        rules: [{
+            test: /\.(js|jsx)$/,
+            exclude: /node_modules/,
+            use: {
+                loader: 'babel-loader'
+            }
+        },
+        {
+            test: /\.css$/,
+            use: ['style-loader', 'css-loader']
+        },
+        {
+            test: /\.(png|woff|woff2|eot|ttf|svg)$/,
+            use: 'url-loader?limit=100000'
+        }
+        ]
+    },
+    resolve: {
+        extensions: ['*', '.js', '.jsx']
+    },
+    devServer: {
+        port: 3000,
+        open: false,
+        historyApiFallback: true,
+        proxy: {
+            '/api': 'http://localhost:8080'
+        }
+    },
     plugins: [
-        new HtmlWebPackPlugin({
-            template: 'src/public/index.html'
+        new CleanWebpackPlugin(),
+        new HtmlWebpackPlugin({
+            template: './public/index.html',
+            favicon: './public/favicon.ico'
         })
     ]
-}
-
-const server = {
-    entry: {
-        'server': './src/server/index.js'
-    },
-    target: 'node',
-    output: {
-        filename: '[name].js',
-        path: path.resolve(__dirname, 'dist')
-    },
-    module: moduleObj,
-    externals: [nodeExternals()]
-}
-
-module.exports = [client, server]
+};

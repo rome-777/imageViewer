@@ -2,13 +2,15 @@
   "name": "shopify-image-viewer",
   "version": "1.0.0",
   "description": "",
-  "main": "./dist/server.js",
+  "main": "src/server/index.js",
   "scripts": {
     "build": "npm run clean && webpack --mode production",
-    "build:dev": "npm run clean && webpack --mode development",
-    "start": "nodemon ./dist/server.js",
-    "seed": "echo \"Error: no seed script avaialble\" && exit 1",
+    "start": "npm run build && node src/server/index.js",
+    "client": "webpack serve --mode development --devtool inline-source-map --hot",
+    "server": "nodemon src/server/index.js --watch src/server",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
     "clean": "rimraf dist",
+    "seed": "echo \"Error: no seed script avaialble\" && exit 1",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -37,13 +39,24 @@
   "devDependencies": {
     "@babel/cli": "^7.16.8",
     "@babel/core": "^7.16.7",
+    "@babel/eslint-parser": "^7.16.5",
+    "@babel/plugin-proposal-class-properties": "^7.16.7",
     "@babel/plugin-transform-runtime": "^7.16.8",
     "@babel/preset-env": "^7.16.8",
     "@babel/preset-react": "^7.16.7",
     "@babel/runtime": "^7.16.7",
     "babel-loader": "^8.2.3",
+    "clean-webpack-plugin": "^4.0.0",
+    "concurrently": "^7.0.0",
+    "css-loader": "^6.5.1",
+    "eslint": "^8.7.0",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-react": "^7.28.0",
     "html-webpack-plugin": "^5.5.0",
     "nodemon": "^2.0.15",
+    "style-loader": "^3.3.1",
+    "url-loader": "^4.1.1",
+    "webpack-dev-server": "^4.7.3",
     "webpack-node-externals": "^3.0.0"
   }
 }
