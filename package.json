@@ -1,25 +1,48 @@
 {
-  "name": "shopify_imageViewer",
+  "name": "shopify-image-viewer",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "./dist/server.js",
   "scripts": {
+    "build": "webpack",
+    "build:dev": "npm run build -- --watch --mode=development",
+    "seed": "node script/seed.js",
+    "start": "npm run build && nodemon ./dist/server.js",
+    "start:dev": "npm run build:dev & npm run start-server",
+    "start:dev:logger": "LOGGING=true npm run start:dev",
+    "start:dev:seed": "SEED=true npm run start:dev",
+    "start-server": "JWT=shh nodemon server -e html,js,scss --ignore public --ignore client",
+    "clean": "rimraf dist node_modules",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rome-777/shopify_imageViewer"
+  },
+  "homepage": "",
   "keywords": [],
-  "author": "",
+  "author": "Roman Shteynberg",
   "license": "ISC",
   "dependencies": {
     "axios": "^0.24.0",
     "express": "^4.17.2",
     "i": "^0.3.7",
     "npm": "^8.3.1",
+    "path": "^0.12.7",
     "pg": "^8.7.1",
+    "rimraf": "^3.0.2",
     "sequelize": "^6.13.0",
     "webpack": "^5.66.0",
     "webpack-cli": "^4.9.1"
   },
   "devDependencies": {
-    "nodemon": "^2.0.15"
+    "@babel/cli": "^7.16.8",
+    "@babel/core": "^7.16.7",
+    "@babel/preset-env": "^7.16.8",
+    "@babel/preset-react": "^7.16.7",
+    "babel-loader": "^8.2.3",
+    "html-webpack-plugin": "^5.5.0",
+    "nodemon": "^2.0.15",
+    "webpack-node-externals": "^3.0.0"
   }
 }
