@@ -4,6 +4,7 @@ const app = express();
 const PORT = process.env.PORT || 8080;
 const DIST_PATH = path.join(__dirname, '../../dist');
 // const PUBLIC_PATH = path.join(__dirname, '../../public');
+// const nasaURL = process.env.NASA_API_KEY ? `https://api.nasa.gov/planetary/apod?api_key=${process.env.NASA_API_KEY}` : null;
 // const { db, syncAndSeed } = require('./db');
 
 // body parsing middleware
@@ -16,7 +17,7 @@ app.use(express.static(DIST_PATH));
 
 // serve index.html
 app.get('*', (req, res) => {
-    res.send(path.join(__dirname, '../../public/index.html'));
+    res.send(path.join(__dirname, '../../public/index.html'), { nasaURL });
 });
 
 // mount api routes
