@@ -1,18 +1,37 @@
 import React, { useState, useEffect, useRef } from 'react';
+import moment from 'moment';
 import { isValidDate } from '../utils/dateValidator';
+// Material UI imports
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
+import Stack from '@mui/material/Stack';
+import { TextField } from '@mui/material';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import { LocalizationProvider } from '@mui/lab';
+import { DatePicker } from '@mui/lab';
+
+
+function alertMUI(text, action) {
+    return (
+        <Alert severity="error">
+            <AlertTitle>Error</AlertTitle>
+            {text}<strong>{action}</strong>
+        </Alert>
+    )
+}
 
 export default function DateSelector(props) {
     /* import props from parent < Gallery > component */
     const { startDate, endDate, setStartDate, setEndDate, initialFirstDay } = props;
     const [fromDate, setFromDate] = useState(startDate);
-    const [untilDate, setUntilDate] = useState(endDate);
+    const [untilDate, setUntilDate] = useState(endDate); // is this correct? am i trying to mutete state directly?
     const fromDateRef = useRef('');
     const untilDateRef = useRef('');
 
     /* handle change with timeout and dispatch new propos to parent */   
-    const handleChange = (e) => {
-        (e.target.name === 'fromDate') ?
-            setFromDate(e.target.value) : setUntilDate(e.target.value)
+    const handleChange = (type, input) => {
+        const date = moment(input).format('YYYY-MM-DD', true)
+        type === 'from' ? setFromDate(date) : setUntilDate(date)
     }
 
     /* upate references to ensure that only the latest date input change is avaialble for dispatch */
@@ -27,39 +46,41 @@ export default function DateSelector(props) {
             isValidDate(fromDateRef.current) && setStartDate(fromDateRef.current);
             isValidDate(untilDateRef.current) && setEndDate(untilDateRef.current);
             if (!isValidDate(fromDateRef.current) || !isValidDate(untilDateRef.current)) {
-                alert('selected dates are not valid')
+                alert('Selected dates are not within the avaialble range.', 'Please revise selection')
             }
         }, 1000);
         return () => clearTimeout(timeout);
     }, [fromDate, untilDate]);
 
     return (
-        <div id='date-selctor-inputs'>
-            
-            <label>From</label>
-            <input
-                type='date'
-                name='fromDate'
-                id='cal-start-date'
-                value={fromDate}
-                onChange={(e) => handleChange(e)}
-                min='1995-06-16'
-                max={initialFirstDay}
-            >
-            </input>
-
-            <label>Until</label>
-            <input 
-                type='date'
-                name='untilDate'
-                id='cal-end-date'
-                value={untilDate}
-                onChange={(e) => handleChange(e)}
-                min='1995-06-16'
-                max={initialFirstDay}
-            >
-            </input>
-
+        <div id='date-selctor'>
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <div id='from-selector'>
+                    <DatePicker
+                        label='From'
+                        value={fromDate}
+                        onChange={(value) => handleChange('from', value)}
+                        maxDate={initialFirstDay}
+                        minDate='1995-06-16'
+                        renderInput={(params) => (
+                            <TextField {...params} helperText={'photos available from Jun 16 1995'} />
+                        )}
+                    />
+                </div>
+                <div id='until-selector'>
+                    <DatePicker
+                        label='Until'
+                        value={untilDate}
+                        onChange={(value) => handleChange('until', value)}
+                        maxDate={initialFirstDay}
+                        minDate='1995-06-16'
+                        showTodayButton={true}
+                        renderInput={(params) => (
+                            <TextField {...params} helperText={'latest photo uploaded today'} />
+                        )}
+                    />
+                </div>
+            </LocalizationProvider>
         </div>
     )
 }

@@ -17,7 +17,7 @@ export async function dateRangeFetch(input) {
         // create unique id for each image from their 'date property + add array of likes to each image
         res.data.forEach(el => {
             el.id = el.date.split('-').join('')
-            el.userLikes = [];
+            el.liked = false;
         });
         return res.data;
     }

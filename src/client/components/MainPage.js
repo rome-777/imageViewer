@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { today, lookBackDate } from '../utils/initialDates';
 import { DateSelector } from '.';
 import { dateRangeFetch } from '../utils/fetchAPIAxios';
+import PhotoGallery from './design/PhotoGallery';
+import PhotoModal from './design/PhotoModal';
 
 /* debug */
 let renderCount = 1;
@@ -14,6 +16,8 @@ export default function MainPage() {
     const [photoArray, setPhotoArray] = useState([]);
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
+    const [openModal, setOpenModal] = useState(false);
+    const [selectedPhotoId, setSelectedPhotoId] = useState('');
     const [loading, setLoading] = useState(true);
     const datesSetRef = useRef(false); // switch to prevent fetching data before dates are set
     const isMountedRef = useRef(false); // switch to prevent returning JSX on the 1st render
@@ -42,34 +46,36 @@ export default function MainPage() {
         setPhotoArray(data);
     };
 
+    const toggleModal = (id, action) => {
+        setSelectedPhotoId(id);
+        setOpenModal(action);
+    } 
+
     //console.log('render count', renderCount++);
 
     return isMountedRef.current && (
         <div id='main-page'>
-
             <div id='date-selector'>
                 <DateSelector
                     startDate={startDate}
                     endDate={endDate}
                     setStartDate={(date) => setStartDate(date)}
-                    setEndDate={(date) => setEndDate(date)}
+                    setEndDate={(date) => setEndDate(date)} // is this passed coprrectly???
                 /> 
-                <div id='mgs-dates'>Please note that photos are only availbel for dates ranging from Jun 16th 1995 until Today</div>
             </div>
-            
             <div id='photo-gallery'>
+                <PhotoGallery
+                    photoArray={photoArray}
+                    toggleModal={toggleModal}
+                />
             </div>
-
-            <div id='photo-tiles'>
-                {photoArray.map(photo => {
-                    return (
-                        <div id='photo-tile' key={photo.id}>
-                            <img id='img-thumbnail' src={photo.url} />
-                        </div>
-                    )
-                })};
+            <div id='photo-modal'>
+                <PhotoModal
+                    photo={photoArray.find(el => el.id === selectedPhotoId)} // filter to give it just the photo obj
+                    openModal={openModal}
+                    toggleModal={toggleModal}
+                />
             </div>
-
         </div>
     )
 }
