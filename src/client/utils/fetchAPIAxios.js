@@ -1,22 +1,23 @@
-/* utility to fetch an array of photos from specified date range */
+/* utility to fetch an array of photos using specified date range from NASA API */
+// NASA data format: 'YYYY-MM-DD'
 import axios from 'axios';
-const apiKey = 'TiV6ZuAnofGPhtQb5kaU00zIvIwJrbwpvJVBhGxw';
-// YYYY-MM-DD
-const startDate = '2017-07-08'
-const endDate = '2017-07-10'
 
-// async function to fetch a single photo from selected date
-export async function fetchPhotoRange() {
+// API data
+const apiKey = 'TiV6ZuAnofGPhtQb5kaU00zIvIwJrbwpvJVBhGxw';
+
+// fetch array of photos
+export async function dateRangeFetch(input) {
     try {
         const res = await axios.get(`https://api.nasa.gov/planetary/apod?api_key=${apiKey}`, {
             params: {
-                start_date: startDate,
-                end_date: endDate
+                start_date: input.fromDate,
+                end_date: input.untilDate
             }
         });
-        // create unique id for each image from their 'date property
+        // create unique id for each image from their 'date property + add array of likes to each image
         res.data.forEach(el => {
-            el.id = parseInt(el.date.split('-').join(''))
+            el.id = el.date.split('-').join('')
+            el.userLikes = [];
         });
         return res.data;
     }
@@ -25,12 +26,12 @@ export async function fetchPhotoRange() {
     }
 }
 
-// async function to fetch a single photo object from selected date
-export async function fetchSinglePhoto() {
+// fetch single photo (object)
+export async function singlePhotoFetch(input) {
     try {
         const res = await axios.get(`https://api.nasa.gov/planetary/apod?api_key=${apiKey}`, {
             params: {
-                date: startDate
+                date: input.fromDate
             }
         });
         return res.data;

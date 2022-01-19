@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { fetchSinglePhoto } from '../utils/fetchDataAxios';
+import { singlePhotoFetch } from '../utils/fetchAPIAxios';
 
 export default function Photo() {
     const [singlePhotoObj, setSinglePhotoObj] = useState(null);
