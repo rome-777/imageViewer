@@ -22,6 +22,10 @@
   "author": "Roman Shteynberg",
   "license": "ISC",
   "dependencies": {
+    "@emotion/react": "^11.7.1",
+    "@emotion/styled": "^11.6.0",
+    "@material-ui/core": "^4.12.3",
+    "@material-ui/icons": "^4.11.2",
     "axios": "^0.24.0",
     "express": "^4.17.2",
     "history": "^5.2.0",
