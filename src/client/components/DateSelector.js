@@ -53,9 +53,9 @@ export default function DateSelector(props) {
     }, [fromDate, untilDate]);
 
     return (
-        <div id='date-selctor'>
+        <div id='date-selector'>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <div id='from-selector'>
+                <div className='date-input-field'>
                     <DatePicker
                         label='From'
                         value={fromDate}
@@ -67,7 +67,7 @@ export default function DateSelector(props) {
                         )}
                     />
                 </div>
-                <div id='until-selector'>
+                <div className='date-input-field'>
                     <DatePicker
                         label='Until'
                         value={untilDate}

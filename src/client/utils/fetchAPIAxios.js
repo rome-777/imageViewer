@@ -1,6 +1,7 @@
 /* utility to fetch an array of photos using specified date range from NASA API */
 // NASA data format: 'YYYY-MM-DD'
 import axios from 'axios';
+import moment from 'moment';
 
 // API data
 const apiKey = 'TiV6ZuAnofGPhtQb5kaU00zIvIwJrbwpvJVBhGxw';
@@ -18,6 +19,7 @@ export async function dateRangeFetch(input) {
         res.data.forEach(el => {
             el.id = el.date.split('-').join('')
             el.liked = false;
+            el.date = moment(el.date).format('MMMM Do YYYY')
         });
         return res.data;
     }

@@ -15,7 +15,7 @@ export const today = () => {
 
 // last date (look back)
 export const lookBackDate = () => {
-    const lookBack = 30;
+    const lookBack = 3;
     const date = new Date();
     date.setDate(date.getDate() - lookBack)
 

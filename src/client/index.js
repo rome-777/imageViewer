@@ -1,3 +1,4 @@
+import { StyledEngineProvider } from '@mui/material/styles';
 import React from 'react';
 import { render } from 'react-dom';
 import { BrowserRouter as Router } from 'react-router-dom';
@@ -8,8 +9,10 @@ const history = createBrowserHistory();
 
 // App encapsulated
 render(
-    <Router history={history}>
-        <App />
-    </Router>,
+    <StyledEngineProvider injectFirst>
+        <Router history={history}>
+            <App />
+        </Router>
+    </StyledEngineProvider>,
     document.getElementById('root')
 );
