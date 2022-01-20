@@ -6,6 +6,7 @@ import { DateSelector } from '.';
 import { dateRangeFetch } from '../utils/fetchNasaAPI';
 import PhotoGallery from './design/PhotoGallery';
 import PhotoModal from './design/PhotoModal';
+import '../../../public/style.css';
 
 /* constants */
 const initFirstDay = lookBackDate(); // initial value for startDate

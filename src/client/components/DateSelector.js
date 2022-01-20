@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import moment from 'moment';
 import { isValidDate } from '../utils/datevalidation';
+import '../../../public/style.css';
 // Material UI imports
 import TextField from '@mui/material/TextField';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
