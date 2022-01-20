@@ -8,8 +8,8 @@
     "npm": "8.1.2"
   },
   "scripts": {
-    "build": "react-scripts --max_old_space_size=8192 build && webpack --mode production",
-    "start": "react-scripts --max_old_space_size=8192 start && npm run clean && npm run build && node src/server/index.js",
+    "build": "webpack --mode production",
+    "start": "npm run clean && npm run build && node src/server/index.js",
     "client": "webpack serve --mode development --devtool inline-source-map --hot",
     "server": "nodemon src/server/index.js --watch src/server",
     "dev": "concurrently \"npm run server\" \"npm run client\"",

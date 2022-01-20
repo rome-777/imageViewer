@@ -12,3 +12,5 @@ npm start
 # App Strucuture 
 - frontend code (react, css, js, other assets) in src/client
 - backend code and database (node, express, axios, pg) in src/server
+
+react-scripts --max_old_space_size=8192 build &&
