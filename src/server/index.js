@@ -18,7 +18,7 @@ app.use(express.static(DIST_PATH));
 app.use(express.static(PUBLIC_PATH));
 
 // serve index.html
-app.get('/', (req, res) => {
+app.get('*', (req, res) => {
     res.send(path.join(__dirname, '../../public/index.html'));
 });
 
@@ -33,7 +33,6 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(process.env.PORT || 8080, () => console.log(`Listening on port ${process.env.PORT || 8080}!`));
-
 
 // initiate server + start listening + catch errors
 // const init = async () => {

@@ -8,8 +8,8 @@
     "npm": "8.1.2"
   },
   "scripts": {
-    "build": "webpack --mode production",
-    "start": "npm run clean && npm run build && node src/server/index.js",
+    "build": "react-scripts --max_old_space_size=8192 build && webpack --mode production",
+    "start": "react-scripts --max_old_space_size=8192 start && npm run clean && npm run build && node src/server/index.js",
     "client": "webpack serve --mode development --devtool inline-source-map --hot",
     "server": "nodemon src/server/index.js --watch src/server",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
@@ -40,6 +40,7 @@
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
     "@mui/icons-material": "^5.3.0",
+    "@mui/lab": "^5.0.0-alpha.65",
     "@mui/material": "^5.3.0",
     "axios": "^0.24.0",
     "babel-loader": "^8.2.3",
@@ -47,15 +48,10 @@
     "concurrently": "^7.0.0",
     "css-loader": "^6.5.1",
     "dotenv": "^14.2.0",
-    "eslint": "^8.7.0",
-    "eslint-plugin-jsx-a11y": "^6.5.1",
-    "eslint-plugin-react": "^7.28.0",
     "express": "^4.17.2",
     "history": "^5.2.0",
     "html-loader": "^3.1.0",
     "html-webpack-plugin": "^5.5.0",
-    "i": "^0.3.7",
-    "latest": "^0.2.0",
     "moment": "^2.29.1",
     "nodemon": "^2.0.15",
     "npm": "^8.3.1",
@@ -68,13 +64,19 @@
     "react-error-overlay": "^6.0.9",
     "react-router": "^6.2.1",
     "react-router-dom": "^6.2.1",
+    "react-scripts": "^5.0.0",
     "rimraf": "^3.0.2",
     "sequelize": "^6.13.0",
     "style-loader": "^3.3.1",
     "url-loader": "^4.1.1",
     "webpack": "^5.66.0",
     "webpack-cli": "^4.9.1",
-    "webpack-dev-server": "^4.7.3",
     "webpack-node-externals": "^3.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.7.0",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-react": "^7.28.0",
+    "webpack-dev-server": "^4.7.3"
   }
 }
