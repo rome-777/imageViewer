@@ -3,7 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
-    entry: ['./src/client/index.js'],
+    entry: './src/client/index.js',
     output: {
         path: path.join(__dirname, './dist'),
         filename: 'bundle.js'
@@ -11,15 +11,16 @@ module.exports = {
     module: {
         rules: [
             {
-            test: /\.(js|jsx)$/,
-            exclude: /node_modules/,
-            use: {
-                loader: 'babel-loader'
-            }
+                test: /\.(js|jsx)$/,
+                exclude: /node_modules/,
+                use: {
+                    loader: 'babel-loader'
+                }
             },
             {
                 test: /\.css$/,
-                use: ['style-loader', 'css-loader']
+                use: ['style-loader', 'css-loader'],
+                sideEffects: true,
             },
             {
                 test: /\.(png|woff|woff2|eot|ttf|svg)$/,
