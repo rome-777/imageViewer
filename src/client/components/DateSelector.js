@@ -2,23 +2,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import moment from 'moment';
 import { isValidDate } from '../utils/dateValidator';
 // Material UI imports
-import Alert from '@mui/material/Alert';
-import AlertTitle from '@mui/material/AlertTitle';
-import Stack from '@mui/material/Stack';
 import { TextField } from '@mui/material';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import { LocalizationProvider } from '@mui/lab';
 import { DatePicker } from '@mui/lab';
-
-
-function alertMUI(text, action) {
-    return (
-        <Alert severity="error">
-            <AlertTitle>Error</AlertTitle>
-            {text}<strong>{action}</strong>
-        </Alert>
-    )
-}
 
 export default function DateSelector(props) {
     /* import props from parent < Gallery > component */
@@ -28,10 +15,10 @@ export default function DateSelector(props) {
     const fromDateRef = useRef('');
     const untilDateRef = useRef('');
 
-    /* handle change with timeout and dispatch new propos to parent */   
-    const handleChange = (type, input) => {
-        const date = moment(input).format('YYYY-MM-DD', true)
-        type === 'from' ? setFromDate(date) : setUntilDate(date)
+    /* handle change and dispatch new propos to parent */   
+    const handleChange = (type, date) => {
+        const formattedDate = moment(date).format('YYYY-MM-DD', true)
+        type === 'from' ? setFromDate(formattedDate) : setUntilDate(formattedDate)
     }
 
     /* upate references to ensure that only the latest date input change is avaialble for dispatch */
@@ -40,7 +27,7 @@ export default function DateSelector(props) {
         untilDateRef.current = untilDate;
     }, [fromDate, untilDate]);
 
-    /* dispatch latest reference to parent followong 500 ms timeout  */
+    /* dispatch latest reference to parent followong 500ms timeout  */
     useEffect(() => {
         const timeout = setTimeout(() => {
             isValidDate(fromDateRef.current) && setStartDate(fromDateRef.current);
@@ -58,23 +45,23 @@ export default function DateSelector(props) {
                 <div className='date-input-field'>
                     <DatePicker
                         label='From'
-                        value={fromDate}
-                        onChange={(value) => handleChange('from', value)}
-                        maxDate={initialFirstDay}
-                        minDate='1995-06-16'
+                        value={moment(startDate).format('MM/DD/YYYY', true)}
+                        onChange={(date) => handleChange('from', date)}
+                        disableFuture
+                        minDate={new Date('06/16/1995')}
+                        maxDate={new Date(moment(endDate).format('MM/DD/YYYY', true))}
                         renderInput={(params) => (
                             <TextField {...params} helperText={'photos available from Jun 16 1995'} />
                         )}
                     />
                 </div>
-                <div className='date-input-field'>
+                <div className='date-input-field'> 
                     <DatePicker
                         label='Until'
-                        value={untilDate}
-                        onChange={(value) => handleChange('until', value)}
-                        maxDate={initialFirstDay}
-                        minDate='1995-06-16'
-                        showTodayButton={true}
+                        value={moment(endDate).format('MM/DD/YYYY', true)}
+                        onChange={(date) => handleChange('until', date)}
+                        disableFuture
+                        minDate={new Date(moment(startDate).format('MM/DD/YYYY', true))}
                         renderInput={(params) => (
                             <TextField {...params} helperText={'latest photo uploaded today'} />
                         )}
