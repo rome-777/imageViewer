@@ -42,9 +42,7 @@
     "dotenv": "^14.2.0",
     "concurrently": "^7.0.0",
     "css-loader": "^6.5.1",
-    "babel-loader": "^8.2.3"
-  },
-  "devDependencies": {
+    "babel-loader": "^8.2.3",
     "@babel/cli": "^7.16.8",
     "@babel/core": "^7.16.7",
     "@babel/eslint-parser": "^7.16.5",
@@ -53,6 +51,9 @@
     "@babel/preset-env": "^7.16.8",
     "@babel/preset-react": "^7.16.7",
     "@babel/runtime": "^7.16.7",
+    "sequelize": "^6.13.0"
+  },
+  "devDependencies": {
     "@mui/lab": "^5.0.0-alpha.65",
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
@@ -69,7 +70,6 @@
     "react-dom": "^17.0.2",
     "react-router": "^6.2.1",
     "react-router-dom": "^6.2.1",
-    "history": "^5.2.0",
-    "sequelize": "^6.13.0"
+    "history": "^5.2.0"
   }
 }
