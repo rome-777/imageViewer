@@ -5,7 +5,7 @@
   "main": "src/server/index.js",
   "scripts": {
     "build": "webpack --mode production",
-    "start": "npm run build && node src/server/index.js",
+    "start": "npm run clean && npm run build && node src/server/index.js",
     "client": "webpack serve --mode development --devtool inline-source-map --hot",
     "server": "nodemon src/server/index.js --watch src/server",
     "dev": "concurrently \"npm run server\" \"npm run client\"",

@@ -18,7 +18,7 @@ app.use(express.static(DIST_PATH));
 app.use(express.static(PUBLIC_PATH));
 
 // serve index.html
-app.get('*', (req, res) => {
+app.get('/', (req, res) => {
     res.send(path.join(__dirname, '../../public/index.html'));
 });
 
