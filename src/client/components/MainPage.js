@@ -1,41 +1,54 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { today, lookBackDate } from '../utils/initialDates';
+import { useCookies } from 'react-cookie';
+import axios from 'axios';
+import { today, lookBackDate } from '../utils/initdates';
 import { DateSelector } from '.';
-import { dateRangeFetch } from '../utils/fetchAPIAxios';
+import { dateRangeFetch } from '../utils/fetchNasaAPI';
 import PhotoGallery from './design/PhotoGallery';
 import PhotoModal from './design/PhotoModal';
-
-/* debug */
-let renderCount = 1;
 
 /* constants */
 const initFirstDay = lookBackDate(); // initial value for startDate
 const initLastDay = today(); // initial value for endDate
 
 export default function MainPage() {
+    const [cookies, setCookie, removeCookie] = useCookies(['user']);
+    const [likedPhotos, setLikedPhoto] = useState(new Set());
     const [photoArray, setPhotoArray] = useState([]);
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const [openModal, setOpenModal] = useState(false);
     const [selectedPhotoId, setSelectedPhotoId] = useState('');
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(true); // loader - TBD
     const datesSetRef = useRef(false); // switch to prevent fetching data before dates are set
     const isMountedRef = useRef(false); // switch to prevent returning JSX on the 1st render
 
-    /* runs on every change in dates */
+    /* runs on every change in dates to fetch photos */
     useEffect(() => {
         datesSetRef.current && fetchData();
         isMountedRef.current = true;
     }, [startDate, endDate]);
     
-    /* runs only on the first render */
+    /* set initial dates to render initial photos -- runs only on the first render */
     useEffect(() => {
         setStartDate(initFirstDay);
         setEndDate(initLastDay);
         datesSetRef.current = true;
     }, []);
 
-    /* data fetching async function */
+    /* create cookie for the user */
+    useEffect(() => {
+        (async () => {
+            try {
+                const { data } = await axios.get('/api/getUserName');
+                setCookie(data, 'cookieMonster', { path: "/" });
+            } catch (err) {
+                console.log(err)
+            }
+        })();
+    }, []);
+
+    /* async data fetch call to API */
     const fetchData = async () => {
         const inputDates = {
             fromDate: startDate,
@@ -46,12 +59,21 @@ export default function MainPage() {
         setPhotoArray(data);
     };
 
+    /* open modal with photo details when the thumbnail is clicked */
     const toggleModal = (id, action) => {
         setSelectedPhotoId(id);
         setOpenModal(action);
-    } 
+    }
 
-    //console.log('render count', renderCount++);
+    /* handle like */
+    const handleLikeButton = (id) => {
+        const photo = photoArray.find(el => el.id === id)
+        if (!photo.liked) {
+            setLikedPhoto(prev => new Set(prev.add(id)));
+        } else {
+            setLikedPhoto(prev => new Set(prev.delete(id)));
+        }
+    }
 
     return isMountedRef.current && (
         <div id='main-page'>
@@ -60,7 +82,7 @@ export default function MainPage() {
                     startDate={startDate}
                     endDate={endDate}
                     setStartDate={(date) => setStartDate(date)}
-                    setEndDate={(date) => setEndDate(date)} // is this passed coprrectly???
+                    setEndDate={(date) => setEndDate(date)}
                 /> 
             </div>
             <div id='photo-gallery'>
@@ -71,9 +93,10 @@ export default function MainPage() {
             </div>
             <div id='photo-modal'>
                 <PhotoModal
-                    photo={photoArray.find(el => el.id === selectedPhotoId)} // filter to give it just the photo obj
+                    photo={photoArray.find(el => el.id === selectedPhotoId)}
                     openModal={openModal}
                     toggleModal={toggleModal}
+                    handleLikeButton={handleLikeButton}
                 />
             </div>
         </div>

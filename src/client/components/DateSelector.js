@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import moment from 'moment';
-import { isValidDate } from '../utils/dateValidator';
+import { isValidDate } from '../utils/datevalidation';
 // Material UI imports
 import { TextField } from '@mui/material';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
@@ -9,9 +9,9 @@ import { DatePicker } from '@mui/lab';
 
 export default function DateSelector(props) {
     /* import props from parent < Gallery > component */
-    const { startDate, endDate, setStartDate, setEndDate, initialFirstDay } = props;
+    const { startDate, endDate, setStartDate, setEndDate } = props;
     const [fromDate, setFromDate] = useState(startDate);
-    const [untilDate, setUntilDate] = useState(endDate); // is this correct? am i trying to mutete state directly?
+    const [untilDate, setUntilDate] = useState(endDate);
     const fromDateRef = useRef('');
     const untilDateRef = useRef('');
 
@@ -39,6 +39,7 @@ export default function DateSelector(props) {
         return () => clearTimeout(timeout);
     }, [fromDate, untilDate]);
 
+    /* Marterial UI dates iinout/out requires converison (via moment)*/
     return (
         <div id='date-selector'>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -55,7 +56,7 @@ export default function DateSelector(props) {
                         )}
                     />
                 </div>
-                <div className='date-input-field'> 
+                <div className='date-input-field'>
                     <DatePicker
                         label='Until'
                         value={moment(endDate).format('MM/DD/YYYY', true)}

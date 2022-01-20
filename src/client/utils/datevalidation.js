@@ -1,5 +1,5 @@
 /* simple date validator */
-import { today } from '../utils/initialDates';
+import { today } from './initdates';
 import moment  from 'moment';
 
 /* inputs & constratints */

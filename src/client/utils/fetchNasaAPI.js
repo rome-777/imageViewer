@@ -3,7 +3,7 @@
 import axios from 'axios';
 import moment from 'moment';
 
-// API data
+// API data -- need to add to environment variables
 const apiKey = 'TiV6ZuAnofGPhtQb5kaU00zIvIwJrbwpvJVBhGxw';
 
 // fetch array of photos
