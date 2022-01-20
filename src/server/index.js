@@ -34,7 +34,7 @@ app.use((err, req, res, next) => {
 
 app.listen(process.env.PORT || 8080, () => console.log(`Listening on port ${process.env.PORT || 8080}!`));
 
-// initiate server + start listening + catch errors
+// initiate server + start listening + catch errors -- doesn't work on Heroku
 // const init = async () => {
 //     try {
 //         app.listen(PORT, () => console.log(`Server listening on PORT: ${PORT}`));
