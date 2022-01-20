@@ -4,7 +4,7 @@ const app = express();
 const os = require('os');
 
 // constants
-const PORT = process.env.PORT || 8080;
+// const PORT = process.env.PORT || 8080;
 const DIST_PATH = path.join(__dirname, '../../dist');
 const PUBLIC_PATH = path.join(__dirname, '../../public');
 // const nasaURL = process.env.NASA_API_KEY ? `https://api.nasa.gov/planetary/apod?api_key=${process.env.NASA_API_KEY}` : null;
@@ -32,14 +32,17 @@ app.use((err, req, res, next) => {
     res.status(err.status || 500).send(err.message || 'Internal server error.');
 });
 
+app.listen(process.env.PORT || 8080, () => console.log(`Listening on port ${process.env.PORT || 8080}!`));
+
+
 // initiate server + start listening + catch errors
-const init = async () => {
-    try {
-        app.listen(PORT, () => console.log(`Server listening on PORT: ${PORT}`));
-    } catch (err) {
-        console.log(err);
-    }
-}
-init();
+// const init = async () => {
+//     try {
+//         app.listen(PORT, () => console.log(`Server listening on PORT: ${PORT}`));
+//     } catch (err) {
+//         console.log(err);
+//     }
+// }
+// init();
 
 
