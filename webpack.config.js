@@ -9,21 +9,22 @@ module.exports = {
         filename: 'bundle.js'
     },
     module: {
-        rules: [{
+        rules: [
+            {
             test: /\.(js|jsx)$/,
             exclude: /node_modules/,
             use: {
                 loader: 'babel-loader'
             }
-        },
-        {
-            test: /\.css$/,
-            use: ['style-loader', 'css-loader']
-        },
-        {
-            test: /\.(png|woff|woff2|eot|ttf|svg)$/,
-            use: 'url-loader?limit=100000'
-        }
+            },
+            {
+                test: /\.css$/,
+                use: ['style-loader', 'css-loader']
+            },
+            {
+                test: /\.(png|woff|woff2|eot|ttf|svg)$/,
+                use: 'url-loader?limit=100000'
+            }
         ]
     },
     resolve: {
@@ -42,7 +43,7 @@ module.exports = {
         new CleanWebpackPlugin(),
         new HtmlWebpackPlugin({
             template: './public/index.html',
-            favicon: './public/favicon.ico'
+            filename: './index.html'
         })
     ]
 };

@@ -12,6 +12,3 @@ npm start
 # App Strucuture 
 - frontend code (react, css, js, other assets) in src/client
 - backend code and database (node, express, axios, pg) in src/server
-
-
-

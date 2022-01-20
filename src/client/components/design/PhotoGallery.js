@@ -28,47 +28,47 @@ export default function PhotoGallery(props) {
             rowHeight={300}
             gap={0}
         >
-        {photoArray.map((item) => {
-            const rows = item.liked ? 2 : 1;
-            return (
-                <ImageListItem
-                    key={item.id}
-                    rows={rows}
-                    className='grow'
-                    sx={{
-                        overflow: 'hidden'
-                    }}
-                >
-                    <img
-                        {...srcset(item.url, 250, 200, rows)}
-                        alt={item.title}
-                        loading="lazy"
-                        onClick={() => handleClick(item.id)}
-                    />
-
-                    <ImageListItemBar
+            {photoArray.map((item) => {
+                const rows = item.liked ? 2 : 1;
+                return (
+                    <ImageListItem
+                        key={item.id}
+                        rows={rows}
+                        className='grow'
                         sx={{
-                                background:
-                                'linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, ' +
-                                'rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
+                            overflow: 'hidden'
                         }}
-                        title={item.title}
-                        position="top"
-                        subtitle={item.date}        
-                        actionIcon={
-                            <IconButton
-                            sx={{ color: 'white' }}
-                            aria-label={`star ${item.title}`}
-                            >
-                                <StarBorder />
-                            </IconButton>
-                        }
-                        actionPosition="left"
-                    />
+                    >
+                        <img
+                            {...srcset(item.url, 250, 200, rows)}
+                            alt={item.title}
+                            loading="lazy"
+                            onClick={() => handleClick(item.id)}
+                        />
 
-                </ImageListItem>
-            );
-        })}
+                        <ImageListItemBar
+                            sx={{
+                                    background:
+                                    'linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, ' +
+                                    'rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
+                            }}
+                            title={item.title}
+                            position="top"
+                            subtitle={item.date}        
+                            actionIcon={
+                                <IconButton
+                                sx={{ color: 'white' }}
+                                aria-label={`star ${item.title}`}
+                                >
+                                    <StarBorder />
+                                </IconButton>
+                            }
+                            actionPosition="left"
+                        />
+
+                    </ImageListItem>
+                );
+            }).reverse()}
         </ImageList>
     );
     }
