@@ -1,10 +1,11 @@
-import * as React from 'react';
-import { ImageList } from '@mui/material';
-import { ImageListItem } from '@mui/material';
-import { ImageListItemBar } from '@mui/material';
-import { IconButton } from '@mui/material';
-import { StarBorder } from '@mui/icons-material';
-import Box from "@mui/material/Box";
+import React from 'react';
+/* Material UI modules */
+import ImageList from '@mui/material/ImageList';
+import ImageListItem from '@mui/material/ImageListItem';
+import ImageListItemBar from '@mui/material/ImageListItemBar';
+import IconButton from '@mui/material/IconButton';
+import StarBorder from '@mui/icons-material/StarBorder';
+
 
 function srcset(url, width, height, rows) {
   return {
@@ -14,8 +15,11 @@ function srcset(url, width, height, rows) {
 }
 
 export default function PhotoGallery(props) {
-    const { photoArray, toggleModal } = props;
-    const handleClick = (id) => toggleModal(id, true);
+    const { loadedPhotosArray, setModal, handleSelectedPhoto } = props;
+    const handleClick = (id) => {
+        setModal(true);
+        handleSelectedPhoto(id);
+    }
 
     return (
         <ImageList
@@ -28,11 +32,11 @@ export default function PhotoGallery(props) {
             rowHeight={300}
             gap={0}
         >
-            {photoArray.map((item) => {
-                const rows = item.liked ? 2 : 1;
+            {loadedPhotosArray.map((photo) => {
+                const rows = photo.liked ? 2 : 1;
                 return (
                     <ImageListItem
-                        key={item.id}
+                        key={photo.id}
                         rows={rows}
                         className='grow'
                         sx={{
@@ -40,10 +44,10 @@ export default function PhotoGallery(props) {
                         }}
                     >
                         <img
-                            {...srcset(item.url, 250, 200, rows)}
-                            alt={item.title}
+                            {...srcset(photo.url, 250, 200, rows)}
+                            alt={photo.title}
                             loading="lazy"
-                            onClick={() => handleClick(item.id)}
+                            onClick={() => handleClick(photo.id)}
                         />
 
                         <ImageListItemBar
@@ -52,13 +56,13 @@ export default function PhotoGallery(props) {
                                     'linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, ' +
                                     'rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
                             }}
-                            title={item.title}
+                            title={photo.title}
                             position="top"
-                            subtitle={item.date}        
+                            subtitle={photo.date}        
                             actionIcon={
                                 <IconButton
                                 sx={{ color: 'white' }}
-                                aria-label={`star ${item.title}`}
+                                aria-label={`star ${photo.title}`}
                                 >
                                     <StarBorder />
                                 </IconButton>
@@ -71,4 +75,4 @@ export default function PhotoGallery(props) {
             }).reverse()}
         </ImageList>
     );
-    }
+}

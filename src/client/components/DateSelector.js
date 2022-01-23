@@ -2,11 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import moment from 'moment';
 import { isValidDate } from '../utils/datevalidation';
 import '../../../public/style.css';
-// Material UI imports
+/* Material UI modules */
 import TextField from '@mui/material/TextField';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import { DatePicker } from '@mui/lab';
+import DatePicker from '@mui/lab/DatePicker';
 
 export default function DateSelector(props) {
     /* import props from parent < Gallery > component */

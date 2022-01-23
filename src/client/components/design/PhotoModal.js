@@ -1,28 +1,31 @@
 import React, { useEffect, useState } from "react";
+/* Material UI modules */
 import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 import Typography from "@mui/material/Typography";
-import { IconButton } from "@mui/material";
-import { StarBorder } from "@mui/icons-material";
+import IconButton from "@mui/material/IconButton";
+import StarBorder from "@mui/icons-material/StarBorder";
+import Star from "@mui/icons-material/Star";
 import Button from "@mui/material/Button";
-
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
 
 export default function PhotoModal(props) {
-	const { photo, toggleModal, openModal, handleLikeButton } = props;
+	const { selectedPhoto, toggleModal, setModal, setSelectedPhoto, handleLikeButton } = props;
 	const [open, setOpen] = useState(false);
-	const handleClose = () => toggleModal("", false);
+	const handleClose = () => {
+		setModal(false);
+		setSelectedPhoto({});
+	};
 
 	useEffect(() => {
-		setOpen(openModal);
-	}, [openModal]);
+		setOpen(toggleModal);
+	}, [toggleModal]);
 
-	if (!photo) return <div />;
+	if (!selectedPhoto) return <div />;
 	return (
 		<div>
 			<Modal
@@ -59,8 +62,8 @@ export default function PhotoModal(props) {
 							>
 
 								<img
-									src={photo.url}
-									alt={photo.title}
+									src={selectedPhoto.url}
+									alt={selectedPhoto.title}
 									loading="lazy"
 								/>
 
@@ -73,13 +76,13 @@ export default function PhotoModal(props) {
 									}}
 								>
 									<Typography	gutterBottom variant="h5"	component="div" marginRight='2'>
-										{photo.title}
+										{selectedPhoto.title}
 									</Typography>
 									<Typography sx={{ mb: 1.5, fontSize: 18 }} color="text.secondary">
-										{photo.date}
+										{selectedPhoto.date}
 									</Typography>
 									<Typography variant="body2" color="text.secondary">
-										{photo.explanation}
+										{selectedPhoto.explanation}
 									</Typography>
 								</CardContent>
 								
@@ -90,11 +93,8 @@ export default function PhotoModal(props) {
 										marginBottom:1
 									}}
 								>
-									<IconButton onClick={() => handleLikeButton(photo.id)}
-										sx={{ color: "black" }}
-										aria-label={`star ${photo.id}`}
-									>
-										<StarBorder/>
+									<IconButton onClick={() => handleLikeButton()}>
+										{selectedPhoto.liked ? <Star sx={{ color: "black" }}/> : <StarBorder sx={{ color: "black" }}/>}
 									</IconButton>
 									<Button size="small" onClick={handleClose}>Close</Button>
 								</CardActions>

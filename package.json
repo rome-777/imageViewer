@@ -20,6 +20,7 @@
     "heroku-postbuild": "echo This runs after Heroku installs dependencies, but before Heroku prunes and caches dependencies.",
     "heroku-cleanup": "echo This runs after Heroku prunes and caches dependencies."
   },
+  "sideEffects": ["*.css"],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/rome-777/shopify_imageViewer"
