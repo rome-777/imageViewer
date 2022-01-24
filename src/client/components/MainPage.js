@@ -1,107 +1,132 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useReducer } from 'react';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
 import { today, lookBackDate } from '../utils/initdates';
 import { DateSelector } from '.';
-import { dateRangeFetch } from '../utils/fetchNasaAPI';
+import { fetchPhotos } from '../utils/fetchNasaAPI';
 import PhotoGallery from './design/PhotoGallery';
 import PhotoModal from './design/PhotoModal';
 import '../../../public/style.css';
 
-// constants //
-const initFirstDay = lookBackDate(); // initial value for startDate
-const initLastDay = today(); // initial value for endDate
+// -- CONSTANTS -- //
+const initStartDate = lookBackDate(); // initial value for startDate
+const initEndDate = today(); // initial value for endDate
+const SET_DATE_RANGE = "SET_DATE_RANGE";
+const SET_LOADED_PHOTOS = "SET_LOADED_PHOTOS";
+const SET_SELECTED_PHOTO = "SET_SELECTED_PHOTO";
+const HANDLE_LIKE = "HANDLE_LIKE";
+
+//-- REDUCER ACTIONS -- //
+const _setLoadedPhotos = (photos) => ({ type: "SET_LOADED_PHOTOS", photos });
+const _setSelectedPhoto = (photo) => ({ type: "SET_SELECTED_PHOTO", photo });
+const _setDateRange = (dates) => ({ type: "SET_DATE_RANGE", dates });
+const _handleLike = () => ({ type: "HANDLE_LIKE" });
+
+// -- REDUCER -- //
+const initialState = {
+	dateRange: {
+		startDate: initStartDate,
+		endDate: initEndDate,
+	},
+	loadedPhotos: [],
+	selectedPhoto: {},
+	userLikedPhotos: new Set(),
+};
+const reducer = (state, action) => {
+    switch (action.type) {
+		case SET_DATE_RANGE:
+			return { ...state, dateRange: action.dates };
+		case SET_LOADED_PHOTOS:
+			return { ...state, loadedPhotos: action.photos };
+		case SET_SELECTED_PHOTO:
+			return { ...state, selectedPhoto: action.photo };
+        case HANDLE_LIKE:
+            let newPhoto = { ...state.selectedPhoto, liked: !state.selectedPhoto.liked }
+            let newLoadedPhotos = state.loadedPhotos.map(el => el.id === state.selectedPhoto.id ? { ...el, ...newPhoto } : el)
+            return { ...state, selectedPhoto: newPhoto, loadedPhotos: newLoadedPhotos };
+		default:
+			return state;
+	}
+};
 
 export default function MainPage() {
-    const [cookies, setCookie, removeCookie] = useCookies(['user']);
-    const [userLikedPhotosList, setLikedPhotos] = useState(new Set());
-    const [loadedPhotosArray, setPhotosArray] = useState([]);
-    const [selectedPhoto, setSelectedPhoto] = useState({});
-    const [toggleModal, setModal] = useState(false);
-    const [loading, setLoading] = useState(true); // loader - TBD
-    const [startDate, setStartDate] = useState('');
-    const [endDate, setEndDate] = useState('');
-    const datesSetRef = useRef(false); // switch to prevent fetching data before initial dates are set
-    const isMountedRef = useRef(false); // switch to prevent returning JSX on the 1st render
+	const [state, dispatch] = useReducer(reducer, initialState);
+	const [cookies, setCookie, removeCookie] = useCookies(["user"]);
+	const [openModal, setModal] = useState(false);
+	const [isLoading, setLoading] = useState(false);
 
-    // runs on every change in dates to fetch photos //
-    useEffect(() => {
-        datesSetRef.current && fetchData();
-        isMountedRef.current = true;
-    }, [startDate, endDate]);
+	// runs on every change in dates to fetch photos //
+	useEffect(() => {
+		fetchData();
+	}, [state.dateRange]);
+
+	// async fetch call to fetch photos from API //
+	const fetchData = async () => {
+		// console.log("fetched"); // *** LOG *** ///
+		setLoading(true);
+		const data = await fetchPhotos(state.dateRange);
+		dispatch(_setLoadedPhotos(data));
+		setLoading(false);
+	};
+
+	// create cookie for the user //
+	// useEffect(() => {
+	// 	return async () => {
+	// 		try {
+	// 			const { data } = await axios.get("/api/getUserName");
+	// 			setCookie(data, "cookieMonster", { path: "/" });
+	// 		} catch (err) {
+	// 			console.log(err);
+	// 		}
+	// 	};
+	// }, []);
+
+	const handleLikeButton = () => {
+		dispatch(_handleLike());
+	};
+
+	const handlePhotoClick = (photo) => {
+		dispatch(_setSelectedPhoto(photo));
+		setModal(true);
+	};
+
+	const handleCloseModal = () => {
+		setModal(false);
+		dispatch(_setSelectedPhoto({}));
+	};
+
+	const handleUpdateDates = (dates) => {
+		dispatch(_setDateRange(dates));
+	};
+
+	// console.log("rendered"); // *** LOG *** ///
+	// console.log(state.selectedPhoto); // *** LOG *** ///
+    // console.log(state.loadedPhotos); // *** LOG *** ///
     
-    // set initial dates to render initial photos -- runs only on the first render //
-    useEffect(() => {
-        setStartDate(initFirstDay);
-        setEndDate(initLastDay);
-        datesSetRef.current = true;
-    }, []);
-
-    // create cookie for the user //
-    useEffect(() => {
-        (async () => {
-            try {
-                const { data } = await axios.get('/api/getUserName');
-                setCookie(data, 'cookieMonster', { path: "/" });
-            } catch (err) {
-                console.log(err)
-            }
-        })();
-    }, []);
-
-    // async data fetch call to API //
-    const fetchData = async () => {
-        const inputDates = {
-            fromDate: startDate,
-            untilDate: endDate
-        };
-        const data = await dateRangeFetch(inputDates);
-        setLoading(false);
-        setPhotosArray(data);
-    };
-
-    // find the selected photo and keep in temp state //
-    const handleSelectedPhoto = (id) => {
-        const photo = loadedPhotosArray.find(el => el.id === id)
-        setSelectedPhoto(photo);
-    }
-
-    // handle like: update selected photo and set state with new array //
-    const handleLikeButton = () => {
-        selectedPhoto.liked = !selectedPhoto.liked ? true : false;
-        let updatedPhotoArray = loadedPhotosArray.map(el => el.id === selectedPhoto.id ? { ...el, selectedPhoto } : el)
-        setPhotosArray(updatedPhotoArray);
-    }
-
-    console.log(loadedPhotosArray)
-    console.log(selectedPhoto);
-
-    return isMountedRef.current && (
-        <div id='main-page'>
-            <div id='date-selector'>
-                <DateSelector
-                    startDate={startDate}
-                    endDate={endDate}
-                    setStartDate={(date) => setStartDate(date)}
-                    setEndDate={(date) => setEndDate(date)}
-                /> 
-            </div>
-            <div id='photo-gallery'>
-                <PhotoGallery
-                    loadedPhotosArray={loadedPhotosArray}
-                    setModal={setModal}
-                    handleSelectedPhoto={handleSelectedPhoto}
-                />
-            </div>
-            <div id='photo-modal'>
-                <PhotoModal
-                    selectedPhoto={selectedPhoto}
-                    toggleModal={toggleModal}
-                    setModal={setModal}
-                    handleLikeButton={handleLikeButton}
-                    setSelectedPhoto={setSelectedPhoto}
-                />
-            </div>
-        </div>
-    )
+	return (
+		<div id="main-page">
+			<div id="date-selector">
+				<DateSelector
+					dateRange={state.dateRange}
+					handleUpdateDates={handleUpdateDates}
+				/>
+			</div>
+			<div id="photo-gallery">
+				<PhotoGallery
+					loadedPhotos={state.loadedPhotos}
+					isLoading={isLoading}
+					setModal={setModal}
+					handlePhotoClick={handlePhotoClick}
+				/>
+			</div>
+			<div id="photo-modal">
+				<PhotoModal
+					selectedPhoto={state.selectedPhoto}
+					openModal={openModal}
+					handleLikeButton={handleLikeButton}
+					handleCloseModal={handleCloseModal}
+				/>
+			</div>
+		</div>
+	);
 }
