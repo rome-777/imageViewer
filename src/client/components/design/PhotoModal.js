@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 /* Material UI modules */
-import { Backdrop, Box, Modal, Fade, Typography, IconButton, Button, Card, CardActions, CardContent } from "@mui/material";
-import { FavoriteBorder, Favorite } from "@mui/icons-material";
+import { Backdrop, Box, Modal, Fade, Typography, IconButton, Button, Card, CardActions, CardContent, Fab, Container } from "@mui/material";
+import {
+	FavoriteBorder,
+	Favorite,
+	ArrowDropDownCircleSharp,
+} from "@mui/icons-material";
 
 export default function PhotoModal(props) {
 	const { selectedPhoto, openModal, handleLikeButton, handleCloseModal } = props;
@@ -55,7 +59,6 @@ export default function PhotoModal(props) {
 								alt={photo.title}
 								loading="lazy"
 							/>
-
 							<CardContent
 								sx={{
 									width: 0,

@@ -67,7 +67,7 @@ export default function DateSelector(props) {
 		    endDate: untilDateRef.current,
 		}
         handleUpdateDates(outputDates);
-    }
+	}
 
 	// Marterial UI dates input/output requires converison (via moment) //
 	return (

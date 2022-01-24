@@ -30,7 +30,7 @@ const initialState = {
 	},
 	loadedPhotos: [],
 	selectedPhoto: {},
-	userLikedPhotos: new Set(),
+	userLikedPhotos: [],
 };
 const reducer = (state, action) => {
     switch (action.type) {
@@ -43,7 +43,12 @@ const reducer = (state, action) => {
         case HANDLE_LIKE:
             let newPhoto = { ...state.selectedPhoto, liked: !state.selectedPhoto.liked }
             let newLoadedPhotos = state.loadedPhotos.map(el => el.id === state.selectedPhoto.id ? { ...el, ...newPhoto } : el)
-            return { ...state, selectedPhoto: newPhoto, loadedPhotos: newLoadedPhotos };
+            return {
+                ...state,
+                selectedPhoto: newPhoto,
+                loadedPhotos: newLoadedPhotos,
+                userLikedPhotos: newPhoto.liked ? [...state.userLikedPhotos, newPhoto.id] : state.userLikedPhotos.filter(el => el !== newPhoto.id)
+            };
 		default:
 			return state;
 	}
@@ -52,7 +57,8 @@ const reducer = (state, action) => {
 export default function MainPage() {
 	const [state, dispatch] = useReducer(reducer, initialState);
 	const [cookies, setCookie, removeCookie] = useCookies(["user"]);
-	const [openModal, setModal] = useState(false);
+    const [openModal, setModal] = useState(false);
+    const [orderSwitch, setOrderSwitch] = useState(true);
 	const [isLoading, setLoading] = useState(false);
 
 	// runs on every change in dates to fetch photos //
@@ -101,19 +107,23 @@ export default function MainPage() {
 
 	// console.log("rendered"); // *** LOG *** ///
 	// console.log(state.selectedPhoto); // *** LOG *** ///
-    // console.log(state.loadedPhotos); // *** LOG *** ///
-    
+	// console.log(state.loadedPhotos); // *** LOG *** ///
+	// console.log(state.userLikedPhotos); // *** LOG *** ///
+
 	return (
 		<div id="main-page">
-			<div id="date-selector">
-				<DateSelector
-					dateRange={state.dateRange}
-					handleUpdateDates={handleUpdateDates}
-				/>
+			<div id="controls">
+				<div id="date-selector">
+					<DateSelector
+						dateRange={state.dateRange}
+						handleUpdateDates={handleUpdateDates}
+					/>
+				</div>
 			</div>
 			<div id="photo-gallery">
 				<PhotoGallery
 					loadedPhotos={state.loadedPhotos}
+					orderSwitch={orderSwitch}
 					isLoading={isLoading}
 					setModal={setModal}
 					handlePhotoClick={handlePhotoClick}
