@@ -20,7 +20,9 @@
     "heroku-postbuild": "echo This runs after Heroku installs dependencies, but before Heroku prunes and caches dependencies.",
     "heroku-cleanup": "echo This runs after Heroku prunes and caches dependencies."
   },
-  "sideEffects": ["*.css"],
+  "sideEffects": [
+    "*.css"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/rome-777/shopify_imageViewer"
@@ -45,6 +47,7 @@
     "@mui/material": "^5.3.0",
     "axios": "^0.24.0",
     "babel-loader": "^8.2.3",
+    "babel-plugin-direct-import": "^1.0.0",
     "clean-webpack-plugin": "^4.0.0",
     "concurrently": "^7.0.0",
     "css-loader": "^6.5.1",

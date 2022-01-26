@@ -7,34 +7,19 @@ import moment from 'moment';
 const apiKey = 'TiV6ZuAnofGPhtQb5kaU00zIvIwJrbwpvJVBhGxw';
 
 // fetch array of photos
-export async function dateRangeFetch(input) {
+export async function fetchPhotos(input) {
     try {
         const res = await axios.get(`https://api.nasa.gov/planetary/apod?api_key=${apiKey}`, {
             params: {
-                start_date: input.fromDate,
-                end_date: input.untilDate
+                start_date: input.startDate,
+                end_date: input.endDate
             }
         });
-        // create unique id for each image from their 'date property + add array of likes to each image
+        // for each image: create unique id from  date property + attach like property + format date
         res.data.forEach(el => {
             el.id = el.date.split('-').join('')
             el.liked = false;
             el.date = moment(el.date).format('MMMM Do YYYY')
-        });
-        return res.data;
-    }
-    catch (err) {
-        console.log(err);
-    }
-}
-
-// fetch single photo (object)
-export async function singlePhotoFetch(input) {
-    try {
-        const res = await axios.get(`https://api.nasa.gov/planetary/apod?api_key=${apiKey}`, {
-            params: {
-                date: input.fromDate
-            }
         });
         return res.data;
     }

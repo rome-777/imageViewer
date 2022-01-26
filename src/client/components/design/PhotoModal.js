@@ -1,41 +1,35 @@
 import React, { useEffect, useState } from "react";
 /* Material UI modules */
-import Backdrop from "@mui/material/Backdrop";
-import Box from "@mui/material/Box";
-import Modal from "@mui/material/Modal";
-import Fade from "@mui/material/Fade";
-import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
-import StarBorder from "@mui/icons-material/StarBorder";
-import Star from "@mui/icons-material/Star";
-import Button from "@mui/material/Button";
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
+import { Backdrop, Box, Modal, Fade, Typography, IconButton, Button, Card, CardActions, CardContent, Fab, Container } from "@mui/material";
+import {
+	FavoriteBorder,
+	Favorite,
+	ArrowDropDownCircleSharp,
+} from "@mui/icons-material";
 
 export default function PhotoModal(props) {
-	const { selectedPhoto, toggleModal, setModal, setSelectedPhoto, handleLikeButton } = props;
+	const { selectedPhoto, openModal, handleLikeButton, handleCloseModal } = props;
 	const [open, setOpen] = useState(false);
-	const handleClose = () => {
-		setModal(false);
-		setSelectedPhoto({});
-	};
+	const [photo, setPhoto] = useState({});
 
+	// open the modal //
+	// set selectedPhoto and check if it was updated (with new value of like property) //
 	useEffect(() => {
-		setOpen(toggleModal);
-	}, [toggleModal]);
+		setOpen(openModal);
+		setPhoto(selectedPhoto);
+	}, [openModal, selectedPhoto]);
 
-	if (!selectedPhoto) return <div />;
+	if (!photo) return <div />;
 	return (
 		<div>
 			<Modal
 				aria-labelledby="transition-modal-title"
 				aria-describedby="transition-modal-description"
 				open={open}
-				onClose={handleClose}
+				onClose={handleCloseModal}
 				closeAfterTransition
 				BackdropComponent={Backdrop}
-			  	BackdropProps={{
+				BackdropProps={{
 					timeout: 1000,
 				}}
 			>
@@ -46,62 +40,84 @@ export default function PhotoModal(props) {
 							top: "50%",
 							left: "50%",
 							transform: "translate(-50%, -50%)",
-              				maxWidth: "85%",
-              				maxHeight: '90vh',
-              				overflow: 'auto',
+							maxWidth: "85%",
+							maxHeight: "90vh",
+							overflow: "auto",
 							boxShadow: 24,
 							outline: "none",
 						}}
 					>
-							<Card
+						<Card
+							sx={{
+								display: "inline-block",
+								maxWidth: "100%",
+								maxHeight: "100%",
+							}}
+						>
+							<img
+								src={photo.url}
+								alt={photo.title}
+								loading="lazy"
+							/>
+							<CardContent
 								sx={{
-									display: 'inline-block',
-									maxWidth: "100%",
-									maxHeight: "100%",
+									width: 0,
+									minWidth: "100%",
+									paddingBottom: 0,
+									p: 2,
 								}}
 							>
-
-								<img
-									src={selectedPhoto.url}
-									alt={selectedPhoto.title}
-									loading="lazy"
-								/>
-
-								<CardContent
-									sx={{
-									width: 0,
-									minWidth: '100%',
-									paddingBottom: 0,
-									p: 2
-									}}
+								<Typography
+									gutterBottom
+									variant="h5"
+									component="div"
+									marginRight="2"
 								>
-									<Typography	gutterBottom variant="h5"	component="div" marginRight='2'>
-										{selectedPhoto.title}
-									</Typography>
-									<Typography sx={{ mb: 1.5, fontSize: 18 }} color="text.secondary">
-										{selectedPhoto.date}
-									</Typography>
-									<Typography variant="body2" color="text.secondary">
-										{selectedPhoto.explanation}
-									</Typography>
-								</CardContent>
-								
-								<CardActions
-									sx={{
-										p: 0,
-										marginLeft:1,
-										marginBottom:1
-									}}
+									{photo.title}
+								</Typography>
+								<Typography
+									sx={{ mb: 1.5, fontSize: 18 }}
+									color="text.secondary"
 								>
-									<IconButton onClick={() => handleLikeButton()}>
-										{selectedPhoto.liked ? <Star sx={{ color: "black" }}/> : <StarBorder sx={{ color: "black" }}/>}
-									</IconButton>
-									<Button size="small" onClick={handleClose}>Close</Button>
-								</CardActions>
-										
-							</Card>
-						</Box>
-					</Fade>
+									{photo.date}
+								</Typography>
+								<Typography
+									variant="body2"
+									color="text.secondary"
+								>
+									{photo.explanation}
+								</Typography>
+							</CardContent>
+
+							<CardActions
+								sx={{
+									p: 0,
+									marginLeft: 1,
+									marginBottom: 1,
+								}}
+							>
+								<IconButton
+									size="large"
+									onClick={handleLikeButton}
+								>
+									{photo.liked ? (
+										<Favorite sx={{ color: "black" }} />
+									) : (
+										<FavoriteBorder
+											sx={{ color: "black" }}
+										/>
+									)}
+								</IconButton>
+								<Button
+									size="medium"
+									onClick={handleCloseModal}
+								>
+									Close
+								</Button>
+							</CardActions>
+						</Card>
+					</Box>
+				</Fade>
 			</Modal>
 		</div>
 	);
