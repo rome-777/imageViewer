@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useReducer } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
 import { today, lookBackDate } from '../utils/initdates';
